@@ -29,7 +29,7 @@
         "AADAdminName": {
             "type": "string",
             "metadata": {
-                "description": "Display name of an Active Directory user/group, to be set as an administrator."
+                "description": "Display name of an Azure Active Directory user/group, to be set as an administrator."
             }
         },
         "AADAdminObjectID": {
@@ -95,7 +95,7 @@
         },
         "collation": {
             "type": "string",
-            "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+            "defaultValue": "SQL_Latin1_General_Cp1_CI_AS_KI_WI",
             "allowedValues": [
                 "SQL_Latin1_General_Cp437_CS_AS_KI_WI",
                 "SQL_Latin1_General_Cp437_CI_AS_KI_WI",
@@ -197,7 +197,7 @@
                         "collation": "[parameters('collation')]",
                         "edition": "[parameters('edition')]",
                         "maxSizeBytes": "[parameters('maxSizeBytes')]",
-                        "requestedServiceObjectiveName": "[parameters('performanceLevel')]",
+                        "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C",
                         "sampleName": ""
                     },
                     "dependsOn": [
