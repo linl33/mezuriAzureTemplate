@@ -1,0 +1,238 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "type": "string", 
+            "metadata": {
+                "description": "Name of the database server. This name must be globally unique."
+            }
+        },
+        "databaseName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the database."
+            }
+        },
+        "administratorLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "Username of the SQL Server administrator."
+            }
+        },
+        "administratorLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the SQL Server administrator."
+            }
+        },
+        "AADAdminName": {
+            "type": "string",
+            "metadata": {
+                "description": "Display name of an Active Directory user/group, to be set as an administrator."
+            }
+        },
+        "AADAdminObjectID": {
+            "type": "string",
+            "metadata": {
+                "description": "Object ID for the Azure Active Directory Administrator."
+            }
+        },
+        "edition": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "Standard",
+                "Premium"
+            ], 
+            "metadata": {
+                "description": "Edition of the database."
+            }
+        },
+        "performanceLevel": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "S0",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3"
+            ],
+            "metadata": {
+                "description": "Performance level for the database. The value must be valid for the chosen edition."
+            }
+        },
+        "maxSizeBytes": {
+            "type": "string",
+            "defaultValue": "2147483648",
+            "allowedValues": [
+                "104857600",
+                "524288000",
+                "1073741824",
+                "2147483648",
+                "5368709120",
+                "10737418240",
+                "21474836480",
+                "32212254720",
+                "42949672960",
+                "53687091200",
+                "107374182400",
+                "161061273600",
+                "214748364800",
+                "268435456000",
+                "322122547200",
+                "429496729600",
+                "536870912000"
+            ],
+            "metadata": {
+                "description": "Max size of the databasein bytes. The value must be within the range of allowed values for the chosen edition."
+            }
+        },
+        "collation": {
+            "type": "string",
+            "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+            "allowedValues": [
+                "SQL_Latin1_General_Cp437_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp437_CI_AS_KI_WI",
+                "SQL_Latin1_General_Pref_Cp437_CI_AS_KI_WI",
+                "SQL_Latin1_General_Cp437_CI_AI_KI_WI",
+                "SQL_Latin1_General_Cp437_BIN",
+                "SQL_Latin1_General_Cp850_BIN",
+                "SQL_Latin1_General_Cp850_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp850_CI_AS_KI_WI",
+                "SQL_Latin1_General_Cp850_CI_AI_KI_WI",
+                "SQL_Latin1_General_Pref_Cp850_CI_AS_KI_WI",
+                "SQL_1xCompat_Cp850_CI_AS_KI_WI",
+                "SQL_Latin1_General_Cp1_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1_CI_AS_KI_WI",
+                "SQL_Latin1_General_Pref_Cp1_CI_AS_KI_WI",
+                "SQL_Latin1_General_Cp1_CI_AI_KI_WI",
+                "SQL_AltDiction_Cp850_CS_AS_KI_WI",
+                "SQL_AltDiction_Pref_Cp850_CI_AS_KI_WI",
+                "SQL_AltDiction_Cp850_CI_AI_KI_WI",
+                "SQL_Scandainavian_Pref_Cp850_CI_AS_KI_WI",
+                "SQL_Scandainavian_Cp850_CS_AS_KI_WI",
+                "SQL_Scandainavian_Cp850_CI_AS_KI_WI",
+                "SQL_AltDiction_Cp850_CI_AS_KI_WI",
+                "SQL_Latin1_General_1250_BIN",
+                "SQL_Latin1_General_Cp1250_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1250_CI_AS_KI_WI",
+                "SQL_Czech_Cp1250_CS_AS_KI_WI",
+                "SQL_Czech_Cp1250_CI_AS_KI_WI",
+                "SQL_Hungarian_Cp1250_CS_AS_KI_WI",
+                "SQL_Hungarian_Cp1250_CI_AS_KI_WI",
+                "SQL_Polish_Cp1250_CS_AS_KI_WI",
+                "SQL_Polish_Cp1250_CI_AS_KI_WI",
+                "SQL_Romanian_Cp1250_CS_AS_KI_WI",
+                "SQL_Romanian_Cp1250_CI_AS_KI_WI",
+                "SQL_Croatian_Cp1250_CS_AS_KI_WI",
+                "SQL_Croatian_Cp1250_CI_AS_KI_WI",
+                "SQL_Slovak_Cp1250_CS_AS_KI_WI",
+                "SQL_Slovak_Cp1250_CI_AS_KI_WI",
+                "SQL_Slovenian_Cp1250_CS_AS_KI_WI",
+                "SQL_Slovenian_Cp1250_CI_AS_KI_WI",
+                "SQL_Latin1_General_1251_BIN",
+                "SQL_Latin1_General_Cp1251_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1251_CI_AS_KI_WI",
+                "SQL_Ukrainian_Cp1251_CS_AS_KI_WI",
+                "SQL_Ukrainian_Cp1251_CI_AS_KI_WI",
+                "SQL_Latin1_General_1253_BIN",
+                "SQL_Latin1_General_Cp1253_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1253_CI_AS_KI_WI",
+                "SQL_Latin1_General_Cp1253_CI_AI_KI_WI",
+                "SQL_Latin1_General_1254_BIN",
+                "SQL_Latin1_General_Cp1254_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1254_CI_AS_KI_WI",
+                "SQL_Latin1_General_1255_BIN",
+                "SQL_Latin1_General_Cp1255_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1255_CI_AS_KI_WI",
+                "SQL_Latin1_General_1256_BIN",
+                "SQL_Latin1_General_Cp1256_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1256_CI_AS_KI_WI",
+                "SQL_Latin1_General_1257_BIN",
+                "SQL_Latin1_General_Cp1257_CS_AS_KI_WI",
+                "SQL_Latin1_General_Cp1257_CI_AS_KI_WI",
+                "SQL_Estonian_Cp1257_CS_AS_KI_WI",
+                "SQL_Estonian_Cp1257_CI_AS_KI_WI",
+                "SQL_Latvian_Cp1257_CS_AS_KI_WI",
+                "SQL_Latvian_Cp1257_CI_AS_KI_WI",
+                "SQL_Lithuanian_Cp1257_CS_AS_KI_WI",
+                "SQL_Lithuanian_Cp1257_CI_AS_KI_WI",
+                "SQL_Danish_Pref_Cp1_CI_AS_KI_WI",
+                "SQL_SwedishPhone_Pref_Cp1_CI_AS_KI_WI",
+                "SQL_SwedishStd_Pref_Cp1_CI_AS_KI_WI",
+                "SQL_Icelandic_Pref_Cp1_CI_AS_KI_WI"
+            ],
+            "metadata": {
+                "description": "The collation of the database, availability of the specific collation depends on the location chosen."
+            }
+        }
+    },
+    "variables": {
+        "AADAdminTenantID": "[subscription().tenantId]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "name": "[parameters('serverName')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "version": "12.0"
+            },
+            "resources": [
+                {
+                    "type": "databases",
+                    "name": "[parameters('databaseName')]",
+                    "apiVersion": "2014-04-01-preview",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "collation": "[parameters('collation')]",
+                        "edition": "[parameters('edition')]",
+                        "maxSizeBytes": "[parameters('maxSizeBytes')]",
+                        "requestedServiceObjectiveName": "[parameters('performanceLevel')]",
+                        "sampleName": ""
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+                    ]
+                },
+                {
+                    "type": "firewallrules",
+                    "name": "AllowAllWindowsAzureIps",
+                    "apiVersion": "2014-04-01-preview",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "endIpAddress": "0.0.0.0",
+                        "startIpAddress": "0.0.0.0"
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+                    ]
+                },
+                {
+                    "type": "administrators",
+                    "name": "ActiveDirectoryAdmin",
+                    "apiVersion": "2014-04-01-preview",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "administratorType": "ActiveDirectory",
+                        "login": "[parameters('AADAdminName')]",
+                        "sid": "[parameters('AADAdminObjectID')]",
+                        "tenantId": "[variables('AADAdminTenantID')]"
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
