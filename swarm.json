@@ -155,7 +155,10 @@
                         }
                     ]
                 }
-            }
+            },
+            "dependsOn": [
+                "[variables('nicName')]"
+            ]
         },
         {
             "apiVersion": "2016-09-01",
@@ -168,11 +171,11 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[concat(reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))), '/subnets', variables('defaultSubnetName'))]"
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '/subnets', variables('defaultSubnetName'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName')))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
                             }
                         }
                     }
@@ -180,7 +183,11 @@
                 "networkSecurityGroup": {
                     "id": "[parameters('nsgResourceId')]"
                 }
-            }
+            },
+            "dependsOn": [
+                "[variables('vnetName')]",
+                "[variables('publicIpName')]"
+            ]
         },
         {
             "apiVersion": "2016-03-30",
