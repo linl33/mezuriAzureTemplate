@@ -147,7 +147,7 @@
                 },
                 {
                     "type": "administrators",
-                    "name": "ActiveDirectoryAdmin",
+                    "name": "activeDirectory",
                     "apiVersion": "2014-04-01-preview",
                     "location": "[resourceGroup().location]",
                     "properties": {
