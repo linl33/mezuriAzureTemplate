@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "planName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the App Service Plan."
+            }
+        },
+        "SKUName": {
+            "type": "string",
+            "defaultValue": "F1",
+            "allowedValues": [
+                "F1",
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3"
+            ],
+            "metadata": {
+                "description": "SKU for the App Service Plan."
+            }
+        },
+        "numberOfWorkers": {
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 10,
+            "defaultValue": 0,
+            "metadata": {
+                "description": "The number of dedicated instances. For F1 and D1 plans, the only allowed value is 0. For other instances, allowed values are 1-10."
+            }
+        },
+        "siteName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the App Service Site, a string will be attached to the end of the name to ensure the name is unique."
+            }
+        }
+    },
+    "variables": {
+        "skuNameTierMap": {
+            "F1": "Free",
+            "D1": "Shared",
+            "B1": "Basic",
+            "B2": "Basic",
+            "B3": "Basic",
+            "S1": "Standard",
+            "S2": "Standard",
+            "S3": "Standard",
+            "P1": "Premium",
+            "P2": "Premium",
+            "P3": "Premium"
+        },
+        "skuTier": "[variables('skuNameTierMap')[parameters('skuName')]]",
+        "workerSize": "[sub(int(substring(parameters('skuName'), 1, 1)), 1)]",
+        "workerSizeId": "[variables('workerSize')]",
+        "siteNameUniq": "[concat(parameters('siteName'), '-', uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "sku": {
+                "tier": "[variables('skuTier')]",
+                "name": "[parameters('skuName')]"
+            },
+            "kind": "",
+            "name": "[parameters('planName')]",
+            "apiVersion": "2016-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "name": "[parameters('planName')]",
+                "workerSize": "[variables('workerSize')]",
+                "workerSizeId": "[variables('workerSizeId')]",
+                "numberOfWorkers": "[parameters('numberOfWorkers')]",
+                "reserved": false,
+                "hostingEnvironment": ""
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "name": "[variables('siteNameUniq')]",
+            "apiVersion": "2016-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "name": "[variables('siteNameUniq')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('planName'))]",
+                "hostingEnvironment": ""
+            },
+            "dependsOn": [
+                "[parameters('planName')]"
+            ],
+            "resources": [
+                {
+                    "type": "config",
+                    "name": "web",
+                    "apiVersion": "2016-03-01",
+                    "location": "[resourceGroup().id]",
+                    "properties": {
+                        "phpVersion": "off",
+                        "webSocketsEnabled": "on"
+                    },
+                    "dependsOn": [
+                        "[variables('siteNameUniq')]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
