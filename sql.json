@@ -128,6 +128,20 @@
                         "requestedServiceObjectiveName": "[parameters('requestedServiceObjectiveName')]",
                         "sampleName": ""
                     },
+                    "resources": [
+                        {
+                            "type": "transparentDataEncryption",
+                            "name": "current",
+                            "apiVersion": "2014-04-01-preview",
+                            "location": null,
+                            "properties": {
+                                "status": "Enabled"
+                            },
+                            "dependsOn": [
+                                "[parameters('databaseName')]"
+                            ]
+                        }
+                    ],
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
                     ]
