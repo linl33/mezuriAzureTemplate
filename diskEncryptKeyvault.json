@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name for the Key Vault"
+            }
+        },
+        "servicePrincipalObjectId": {
+            "type": "string",
+            "metadata": {
+                "description": "Object Id of the sercive principal for managing VM encryption"
+            }
+        },
+        "SKUName": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "SKU for the Key Vault"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[parameters('keyVaultName')]",
+            "apiVersion": "2015-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "enabledForDeployment": false,
+                "enabledForTemplateDeployment": false,
+                "enabledForDiskEncryption": true,
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('servicePrincipalObjectId')]",
+                        "permissions": {
+                            "keys": [
+                                "wrapKey"
+                            ],
+                            "secrets": [
+                                "set"
+                            ]
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "[parameters('SKUName')]",
+                    "family": "A"
+                }
+            }
+        }
+    ]
+}
