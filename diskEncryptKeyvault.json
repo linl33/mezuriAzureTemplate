@@ -11,7 +11,7 @@
         "servicePrincipalObjectId": {
             "type": "string",
             "metadata": {
-                "description": "Object Id of the sercive principal for managing VM encryption"
+                "description": "Object Id of the sercive principal for managing VM disk encryption"
             }
         },
         "SKUName": {
